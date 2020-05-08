@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ClassRoomMapper">
+  <resultMap id="BaseResultMap" type="po.ClassRoom">
+    <id column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="tc_id" jdbcType="INTEGER" property="tcId" />
+    <result column="roomname" jdbcType="VARCHAR" property="roomname" />
+    <result column="roomdescrible" jdbcType="VARCHAR" property="roomdescrible" />
+    <association property="user" column="tc_id" select="dao.UserMapper.selectByPrimaryKey"></association>
+  </resultMap>
+
+  <resultMap id="fristListResultMap" type="po.ClassRoom">
+    <id column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="tc_id" jdbcType="INTEGER" property="tcId" />
+    <result column="roomname" jdbcType="VARCHAR" property="roomname" />
+    <result column="roomdescrible" jdbcType="VARCHAR" property="roomdescrible" />
+    <association property="user" column="tc_id" select="dao.UserMapper.selectByPrimaryKey"></association>
+    <collection property="classRoomCaseList" column="ro_id" select="dao.ClassRoomCaseMapper.selectByroidAll"></collection>
+    <collection property="studentList" column="ro_id" select="dao.UserMapper.selectByroid" fetchType="lazy"></collection>
+  </resultMap>
+
+  <resultMap id="secondListResultMap" type="po.ClassRoom">
+    <id column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="tc_id" jdbcType="INTEGER" property="tcId" />
+    <result column="roomname" jdbcType="VARCHAR" property="roomname" />
+    <result column="roomdescrible" jdbcType="VARCHAR" property="roomdescrible" />
+    <association property="user" column="tc_id" select="dao.UserMapper.selectByPrimaryKey"></association>
+    <collection property="classRoomCaseList" column="ro_id" select="dao.ClassRoomCaseMapper.selectByroid"></collection>
+  </resultMap>
+
+  <resultMap id="thirdListResultMap" type="po.ClassRoom">
+    <id column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="tc_id" jdbcType="INTEGER" property="tcId" />
+    <result column="roomname" jdbcType="VARCHAR" property="roomname" />
+    <result column="roomdescrible" jdbcType="VARCHAR" property="roomdescrible" />
+    <association property="user" column="tc_id" select="dao.UserMapper.selectByPrimaryKey"></association>
+    <collection property="classRoomCaseList" column="ro_id" select="dao.ClassRoomCaseMapper.selectByroidtwo"></collection>
+  </resultMap>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ro_id, tc_id, roomname, roomdescrible
+  </sql>
+  <select id="selectByExample" parameterType="po.ClassRoomExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from classroom
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="fristListResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from classroom
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectBytcid" parameterType="java.lang.Integer" resultMap="secondListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from classroom
+    where tc_id = #{tcId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBystid" parameterType="java.lang.Integer" resultMap="secondListResultMap">
+    select
+    classroom.ro_id,classroom.tc_id,classroom.roomname,classroom.roomdescrible
+    from user,student_classroom,classroom
+    where user.us_id=student_classroom.st_id and student_classroom.ro_id=classroom.ro_id and user.us_id=#{stId,jdbcType=INTEGER};
+  </select>
+
+  <select id="selectByroid" parameterType="java.lang.Integer" resultMap="thirdListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from classroom
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from classroom
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.ClassRoom">
+    insert into classroom (ro_id, tc_id, roomname, 
+      roomdescrible)
+    values (#{roId,jdbcType=INTEGER}, #{tcId,jdbcType=INTEGER}, #{roomname,jdbcType=VARCHAR}, 
+      #{roomdescrible,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="po.ClassRoom">
+    insert into classroom
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roId != null">
+        ro_id,
+      </if>
+      <if test="tcId != null">
+        tc_id,
+      </if>
+      <if test="roomname != null">
+        roomname,
+      </if>
+      <if test="roomdescrible != null">
+        roomdescrible,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roId != null">
+        #{roId,jdbcType=INTEGER},
+      </if>
+      <if test="tcId != null">
+        #{tcId,jdbcType=INTEGER},
+      </if>
+      <if test="roomname != null">
+        #{roomname,jdbcType=VARCHAR},
+      </if>
+      <if test="roomdescrible != null">
+        #{roomdescrible,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="po.ClassRoomExample" resultType="java.lang.Long">
+    select count(*) from classroom
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update classroom
+    <set>
+      <if test="record.roId != null">
+        ro_id = #{record.roId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tcId != null">
+        tc_id = #{record.tcId,jdbcType=INTEGER},
+      </if>
+      <if test="record.roomname != null">
+        roomname = #{record.roomname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roomdescrible != null">
+        roomdescrible = #{record.roomdescrible,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update classroom
+    set ro_id = #{record.roId,jdbcType=INTEGER},
+      tc_id = #{record.tcId,jdbcType=INTEGER},
+      roomname = #{record.roomname,jdbcType=VARCHAR},
+      roomdescrible = #{record.roomdescrible,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="po.ClassRoom">
+    update classroom
+    <set>
+      <if test="tcId != null">
+        tc_id = #{tcId,jdbcType=INTEGER},
+      </if>
+      <if test="roomname != null">
+        roomname = #{roomname,jdbcType=VARCHAR},
+      </if>
+      <if test="roomdescrible != null">
+        roomdescrible = #{roomdescrible,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.ClassRoom">
+    update classroom
+    set tc_id = #{tcId,jdbcType=INTEGER},
+      roomname = #{roomname,jdbcType=VARCHAR},
+      roomdescrible = #{roomdescrible,jdbcType=VARCHAR}
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </update>
+</mapper>

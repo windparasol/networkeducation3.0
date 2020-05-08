@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserMapper">
+  <resultMap id="BaseResultMap" type="po.User">
+  <id column="us_id" jdbcType="INTEGER" property="usId" />
+  <result column="email" jdbcType="VARCHAR" property="email" />
+  <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+  <result column="truename" jdbcType="VARCHAR" property="truename" />
+  <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+  <result column="phone" jdbcType="VARCHAR" property="phone" />
+  <result column="head_url" jdbcType="VARCHAR" property="headUrl" />
+  <result column="user_type" jdbcType="CHAR" property="userType" />
+</resultMap>
+
+  <resultMap id="fristListResultMap" type="po.User">
+    <id column="us_id" jdbcType="INTEGER" property="usId" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="truename" jdbcType="VARCHAR" property="truename" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="head_url" jdbcType="VARCHAR" property="headUrl" />
+    <result column="user_type" jdbcType="CHAR" property="userType" />
+    <collection property="classRoomList" column="us_id" select="dao.ClassRoomMapper.selectBystid" fetchType="lazy"></collection>
+    <collection property="questionReplyList" column="us_id" select="dao.QuestionReplyMapper.selectBystid"></collection>
+  </resultMap>
+
+  <resultMap id="secondListResultMap" type="po.User">
+    <id column="us_id" jdbcType="INTEGER" property="usId" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="truename" jdbcType="VARCHAR" property="truename" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="head_url" jdbcType="VARCHAR" property="headUrl" />
+    <result column="user_type" jdbcType="CHAR" property="userType" />
+    <collection property="questionReplyList" column="us_id" select="dao.QuestionReplyMapper.selectBystid"></collection>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    us_id, email, pwd, truename, nickname, phone, head_url, user_type
+  </sql>
+  <select id="selectByExample" parameterType="po.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="fristListResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where us_id = #{usId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByroid" parameterType="java.lang.Integer" resultMap="secondListResultMap">
+    select
+    user.us_id,user.email,user.pwd,user.truename,user.nickname,user.phone,user.user_type,user.head_url
+    from user,student_classroom,classroom
+    where user.us_id=student_classroom.st_id and student_classroom.ro_id=classroom.ro_id and classroom.ro_id= #{roId,jdbcType=INTEGER};
+  </select>
+
+  <select id="selectBytcid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where us_id = #{tcId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where us_id = #{usId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.User">
+    insert into user (us_id, email, pwd, 
+      truename, nickname, phone, 
+      head_url, user_type)
+    values (#{usId,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{truename,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{headUrl,jdbcType=VARCHAR}, #{userType,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="po.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="usId != null">
+        us_id,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="truename != null">
+        truename,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="headUrl != null">
+        head_url,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="usId != null">
+        #{usId,jdbcType=INTEGER},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="truename != null">
+        #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="headUrl != null">
+        #{headUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="po.UserExample" resultType="java.lang.Long">
+    select count(*) from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user
+    <set>
+      <if test="record.usId != null">
+        us_id = #{record.usId,jdbcType=INTEGER},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null">
+        pwd = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.truename != null">
+        truename = #{record.truename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nickname != null">
+        nickname = #{record.nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headUrl != null">
+        head_url = #{record.headUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userType != null">
+        user_type = #{record.userType,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+  <update id="updateByExample" parameterType="map">
+    update user
+    set us_id = #{record.usId,jdbcType=INTEGER},
+      email = #{record.email,jdbcType=VARCHAR},
+      pwd = #{record.pwd,jdbcType=VARCHAR},
+      truename = #{record.truename,jdbcType=VARCHAR},
+      nickname = #{record.nickname,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      head_url = #{record.headUrl,jdbcType=VARCHAR},
+      user_type = #{record.userType,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="po.User">
+    update user
+    <set>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="truename != null">
+        truename = #{truename,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="headUrl != null">
+        head_url = #{headUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=CHAR},
+      </if>
+    </set>
+    where us_id = #{usId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.User">
+    update user
+    set email = #{email,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      truename = #{truename,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      head_url = #{headUrl,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=CHAR}
+    where us_id = #{usId,jdbcType=INTEGER}
+  </update>
+
+  <insert id="insertstudentclassroom" parameterType="Map">
+    insert into student_classroom(st_id, ro_id, stime, state) values(#{stId,jdbcType=INTEGER},#{roId,jdbcType=INTEGER},#{stime,jdbcType=DATE},#{state,jdbcType=CHAR})
+  </insert>
+
+  <select id="selectemailcount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from user
+    where email = #{email,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByemail" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where email = #{email,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

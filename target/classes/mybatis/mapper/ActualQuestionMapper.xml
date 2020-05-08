@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ActualQuestionMapper">
+  <resultMap id="BaseResultMap" type="po.ActualQuestion">
+    <id column="aq_id" jdbcType="INTEGER" property="aqId" />
+    <result column="cc_id" jdbcType="INTEGER" property="ccId" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="question" jdbcType="VARCHAR" property="question" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    aq_id, cc_id, note, score, question
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from actualquestion
+    where aq_id = #{aqId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByccid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from actualquestion
+    where  cc_id= #{ccid,jdbcType=INTEGER}
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from actualquestion
+    where aq_id = #{aqId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.ActualQuestion">
+    insert into actualquestion (aq_id, cc_id, note, 
+      score, question)
+    values (#{aqId,jdbcType=INTEGER}, #{ccId,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR}, 
+      #{score,jdbcType=INTEGER}, #{question,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="po.ActualQuestion">
+    insert into actualquestion
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="aqId != null">
+        aq_id,
+      </if>
+      <if test="ccId != null">
+        cc_id,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="question != null">
+        question,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="aqId != null">
+        #{aqId,jdbcType=INTEGER},
+      </if>
+      <if test="ccId != null">
+        #{ccId,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="question != null">
+        #{question,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="po.ActualQuestion">
+    update actualquestion
+    <set>
+      <if test="ccId != null">
+        cc_id = #{ccId,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="question != null">
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where aq_id = #{aqId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.ActualQuestion">
+    update actualquestion
+    set cc_id = #{ccId,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR},
+      score = #{score,jdbcType=INTEGER},
+      question = #{question,jdbcType=VARCHAR}
+    where aq_id = #{aqId,jdbcType=INTEGER}
+  </update>
+</mapper>

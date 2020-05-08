@@ -1,0 +1,10 @@
+创建数据库表的最后一个语句会有一个ENGINE=INNODB DEFAULT CHARSET='UTF_8' 其中innob 是一种数据库引擎，还有一种引擎是  两种的区别是innodb支持事务但不支持
+runtimexcption及其子类是非受检异常，而excption及其子类是受检异常。
+js是一种弱类型语言 他在声明一个变量时不用声明变量的类型 都是var 变量名 ={  };而Java不一样 比如int a；那么a只能是整数类型变量 在js中==是弱判等 ===才是强判等（类型一样才能相等）
+json格式的字符串是指Java中的 String 变量名 ="姓名："Tom",年龄:"12""
+ObjectMapper 是一个处理json格式字符串的类，定义他的类后（objectmapper 变量名 = new objectmapper）通过变量名.writevalue方法将普通字符串转化为json格式，而通过readvalue将json格式字符串转化为普通字符串
+返回值需要判断时可以使用 return判断表达式？ture：fasle 其中ture是在表达式成立时返回 而fasle在失败时返回
+Java中的静态代码块 如 static{  }出现在类属性下面  这是一种程序启动时初始化手段 代码只会执行一次。
+在cmd中输入net stop mysql 停止mysql服务 再输入net start mysql启动
+show create table 表名 这个语句可以查找到数据库中此表在建表时的语句。
+在日常编程中在try-catch语句的catch中也就是出现异常后最好返回一个空的所需要的返回类型值，千万不要返回null。比如返回值是arrylist类型 出错了在catch中添加一个return new arrylist<>；

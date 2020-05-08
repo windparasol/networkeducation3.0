@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.CasePlanMapper">
+  <resultMap id="BaseResultMap" type="po.CasePlan">
+    <id column="cp_id" jdbcType="INTEGER" property="cpId" />
+    <result column="tc_id" jdbcType="INTEGER" property="tcId" />
+    <result column="case_name" jdbcType="VARCHAR" property="caseName" />
+    <result column="state" jdbcType="CHAR" property="state" />
+    <result column="pass" jdbcType="CHAR" property="pass" />
+    <result column="stime" jdbcType="DATE" property="stime" />
+    <result column="etime" jdbcType="DATE" property="etime" />
+    <result column="describle" jdbcType="VARCHAR" property="describle" />
+    <result column="annex_url" jdbcType="VARCHAR" property="annexUrl" />
+    <result column="aim" jdbcType="VARCHAR" property="aim" />
+  </resultMap>
+
+  <resultMap id="ListResultMap" type="po.CasePlan">
+    <id column="cp_id" jdbcType="INTEGER" property="cpId" />
+    <result column="tc_id" jdbcType="INTEGER" property="tcId" />
+    <result column="case_name" jdbcType="VARCHAR" property="caseName" />
+    <result column="state" jdbcType="CHAR" property="state" />
+    <result column="pass" jdbcType="CHAR" property="pass" />
+    <result column="stime" jdbcType="DATE" property="stime" />
+    <result column="etime" jdbcType="DATE" property="etime" />
+    <result column="describle" jdbcType="VARCHAR" property="describle" />
+    <result column="annex_url" jdbcType="VARCHAR" property="annexUrl" />
+    <result column="aim" jdbcType="VARCHAR" property="aim" />
+    <association property="user" column="tc_id" select="dao.UserMapper.selectByPrimaryKey"/>
+    <collection property="planDetailList" column="cp_id" select="dao.PlanDetailMapper.selectBycpId"/>
+  </resultMap>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    cp_id, tc_id, case_name, state, pass, stime, etime, describle, annex_url, aim
+  </sql>
+  <select id="selectByExample" parameterType="po.CasePlanExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from case_plan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from case_plan
+    where cp_id = #{cpId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBytcId" parameterType="java.lang.Integer" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from case_plan
+    where tc_id = #{tcId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBystate" parameterType="java.lang.String" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from case_plan
+    where state = "0" or state = "1"
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from case_plan
+    where cp_id = #{cpId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.CasePlan">
+    insert into case_plan (cp_id, tc_id, case_name, 
+      state, pass, stime, etime, 
+      describle, annex_url, aim
+      )
+    values (#{cpId,jdbcType=INTEGER}, #{tcId,jdbcType=INTEGER}, #{caseName,jdbcType=VARCHAR}, 
+      #{state,jdbcType=CHAR}, #{pass,jdbcType=CHAR}, #{stime,jdbcType=DATE}, #{etime,jdbcType=DATE}, 
+      #{describle,jdbcType=VARCHAR}, #{annexUrl,jdbcType=VARCHAR}, #{aim,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="po.CasePlan">
+    insert into case_plan
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cpId != null">
+        cp_id,
+      </if>
+      <if test="tcId != null">
+        tc_id,
+      </if>
+      <if test="caseName != null">
+        case_name,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="pass != null">
+        pass,
+      </if>
+      <if test="stime != null">
+        stime,
+      </if>
+      <if test="etime != null">
+        etime,
+      </if>
+      <if test="describle != null">
+        describle,
+      </if>
+      <if test="annexUrl != null">
+        annex_url,
+      </if>
+      <if test="aim != null">
+        aim,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cpId != null">
+        #{cpId,jdbcType=INTEGER},
+      </if>
+      <if test="tcId != null">
+        #{tcId,jdbcType=INTEGER},
+      </if>
+      <if test="caseName != null">
+        #{caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+      <if test="pass != null">
+        #{pass,jdbcType=CHAR},
+      </if>
+      <if test="stime != null">
+        #{stime,jdbcType=DATE},
+      </if>
+      <if test="etime != null">
+        #{etime,jdbcType=DATE},
+      </if>
+      <if test="describle != null">
+        #{describle,jdbcType=VARCHAR},
+      </if>
+      <if test="annexUrl != null">
+        #{annexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="aim != null">
+        #{aim,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="po.CasePlanExample" resultType="java.lang.Long">
+    select count(*) from case_plan
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update case_plan
+    <set>
+      <if test="record.cpId != null">
+        cp_id = #{record.cpId,jdbcType=INTEGER},
+      </if>
+      <if test="record.tcId != null">
+        tc_id = #{record.tcId,jdbcType=INTEGER},
+      </if>
+      <if test="record.caseName != null">
+        case_name = #{record.caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+      <if test="record.pass != null">
+        pass = #{record.pass,jdbcType=CHAR},
+      </if>
+      <if test="record.stime != null">
+        stime = #{record.stime,jdbcType=DATE},
+      </if>
+      <if test="record.etime != null">
+        etime = #{record.etime,jdbcType=DATE},
+      </if>
+      <if test="record.describle != null">
+        describle = #{record.describle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.annexUrl != null">
+        annex_url = #{record.annexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aim != null">
+        aim = #{record.aim,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update case_plan
+    set cp_id = #{record.cpId,jdbcType=INTEGER},
+      tc_id = #{record.tcId,jdbcType=INTEGER},
+      case_name = #{record.caseName,jdbcType=VARCHAR},
+      state = #{record.state,jdbcType=CHAR},
+      pass = #{record.pass,jdbcType=CHAR},
+      stime = #{record.stime,jdbcType=DATE},
+      etime = #{record.etime,jdbcType=DATE},
+      describle = #{record.describle,jdbcType=VARCHAR},
+      annex_url = #{record.annexUrl,jdbcType=VARCHAR},
+      aim = #{record.aim,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="po.CasePlan">
+    update case_plan
+    <set>
+      <if test="tcId != null">
+        tc_id = #{tcId,jdbcType=INTEGER},
+      </if>
+      <if test="caseName != null">
+        case_name = #{caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+      <if test="pass != null">
+        pass = #{pass,jdbcType=CHAR},
+      </if>
+      <if test="stime != null">
+        stime = #{stime,jdbcType=DATE},
+      </if>
+      <if test="etime != null">
+        etime = #{etime,jdbcType=DATE},
+      </if>
+      <if test="describle != null">
+        describle = #{describle,jdbcType=VARCHAR},
+      </if>
+      <if test="annexUrl != null">
+        annex_url = #{annexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="aim != null">
+        aim = #{aim,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cp_id = #{cpId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.CasePlan">
+    update case_plan
+    set tc_id = #{tcId,jdbcType=INTEGER},
+      case_name = #{caseName,jdbcType=VARCHAR},
+      state = #{state,jdbcType=CHAR},
+      pass = #{pass,jdbcType=CHAR},
+      stime = #{stime,jdbcType=DATE},
+      etime = #{etime,jdbcType=DATE},
+      describle = #{describle,jdbcType=VARCHAR},
+      annex_url = #{annexUrl,jdbcType=VARCHAR},
+      aim = #{aim,jdbcType=VARCHAR}
+    where cp_id = #{cpId,jdbcType=INTEGER}
+  </update>
+</mapper>

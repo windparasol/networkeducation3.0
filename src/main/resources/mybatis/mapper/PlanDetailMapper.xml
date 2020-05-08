@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.PlanDetailMapper">
+  <resultMap id="BaseResultMap" type="po.PlanDetail">
+    <id column="pd_id" jdbcType="INTEGER" property="pdId" />
+    <result column="cp_id" jdbcType="INTEGER" property="cpId" />
+    <result column="cp_type" jdbcType="CHAR" property="cpType" />
+    <result column="reply_text" jdbcType="VARCHAR" property="replyText" />
+    <result column="annex_url" jdbcType="VARCHAR" property="annexUrl" />
+    <result column="state" jdbcType="CHAR" property="state" />
+    <result column="stime" jdbcType="DATE" property="stime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    pd_id, cp_id, cp_type, reply_text, annex_url, state, stime
+  </sql>
+  <select id="selectByExample" parameterType="po.PlanDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from plan_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plan_detail
+    where pd_id = #{pdId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plan_detail
+    where pd_id = #{pdId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.PlanDetail">
+    insert into plan_detail (pd_id, cp_id, cp_type, 
+      reply_text, annex_url, state, 
+      stime)
+    values (#{pdId,jdbcType=INTEGER}, #{cpId,jdbcType=INTEGER}, #{cpType,jdbcType=CHAR}, 
+      #{replyText,jdbcType=VARCHAR}, #{annexUrl,jdbcType=VARCHAR}, #{state,jdbcType=CHAR}, 
+      #{stime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="po.PlanDetail">
+    insert into plan_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pdId != null">
+        pd_id,
+      </if>
+      <if test="cpId != null">
+        cp_id,
+      </if>
+      <if test="cpType != null">
+        cp_type,
+      </if>
+      <if test="replyText != null">
+        reply_text,
+      </if>
+      <if test="annexUrl != null">
+        annex_url,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="stime != null">
+        stime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pdId != null">
+        #{pdId,jdbcType=INTEGER},
+      </if>
+      <if test="cpId != null">
+        #{cpId,jdbcType=INTEGER},
+      </if>
+      <if test="cpType != null">
+        #{cpType,jdbcType=CHAR},
+      </if>
+      <if test="replyText != null">
+        #{replyText,jdbcType=VARCHAR},
+      </if>
+      <if test="annexUrl != null">
+        #{annexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+      <if test="stime != null">
+        #{stime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="po.PlanDetailExample" resultType="java.lang.Long">
+    select count(*) from plan_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update plan_detail
+    <set>
+      <if test="record.pdId != null">
+        pd_id = #{record.pdId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cpId != null">
+        cp_id = #{record.cpId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cpType != null">
+        cp_type = #{record.cpType,jdbcType=CHAR},
+      </if>
+      <if test="record.replyText != null">
+        reply_text = #{record.replyText,jdbcType=VARCHAR},
+      </if>
+      <if test="record.annexUrl != null">
+        annex_url = #{record.annexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+      <if test="record.stime != null">
+        stime = #{record.stime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update plan_detail
+    set pd_id = #{record.pdId,jdbcType=INTEGER},
+      cp_id = #{record.cpId,jdbcType=INTEGER},
+      cp_type = #{record.cpType,jdbcType=CHAR},
+      reply_text = #{record.replyText,jdbcType=VARCHAR},
+      annex_url = #{record.annexUrl,jdbcType=VARCHAR},
+      state = #{record.state,jdbcType=CHAR},
+      stime = #{record.stime,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="po.PlanDetail">
+    update plan_detail
+    <set>
+      <if test="cpId != null">
+        cp_id = #{cpId,jdbcType=INTEGER},
+      </if>
+      <if test="cpType != null">
+        cp_type = #{cpType,jdbcType=CHAR},
+      </if>
+      <if test="replyText != null">
+        reply_text = #{replyText,jdbcType=VARCHAR},
+      </if>
+      <if test="annexUrl != null">
+        annex_url = #{annexUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+      <if test="stime != null">
+        stime = #{stime,jdbcType=DATE},
+      </if>
+    </set>
+    where pd_id = #{pdId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.PlanDetail">
+    update plan_detail
+    set cp_id = #{cpId,jdbcType=INTEGER},
+      cp_type = #{cpType,jdbcType=CHAR},
+      reply_text = #{replyText,jdbcType=VARCHAR},
+      annex_url = #{annexUrl,jdbcType=VARCHAR},
+      state = #{state,jdbcType=CHAR},
+      stime = #{stime,jdbcType=DATE}
+    where pd_id = #{pdId,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectBycpId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from plan_detail
+    where cp_id = #{cpId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBycpIdAndstate" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from plan_detail
+    where cp_id = #{cpId,jdbcType=INTEGER} and state=#{state,jdbcType=VARCHAR} and cp_type=#{cpType,jdbcType=VARCHAR}
+  </select>
+</mapper>

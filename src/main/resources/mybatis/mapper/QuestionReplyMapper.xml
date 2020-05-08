@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.QuestionReplyMapper">
+  <resultMap id="BaseResultMap" type="po.QuestionReply">
+    <id column="qr_id" jdbcType="INTEGER" property="qrId" />
+    <result column="cc_id" jdbcType="INTEGER" property="ccId" />
+    <result column="aq_id" jdbcType="INTEGER" property="aqId" />
+    <result column="qstate" jdbcType="CHAR" property="qstate" />
+    <result column="qscore" jdbcType="INTEGER" property="qscore" />
+    <result column="st_id" jdbcType="INTEGER" property="stId" />
+  </resultMap>
+
+  <resultMap id="ListResultMap" type="po.QuestionReply">
+    <id column="qr_id" jdbcType="INTEGER" property="qrId" />
+    <result column="cc_id" jdbcType="INTEGER" property="ccId" />
+    <result column="aq_id" jdbcType="INTEGER" property="aqId" />
+    <result column="qstate" jdbcType="CHAR" property="qstate" />
+    <result column="qscore" jdbcType="INTEGER" property="qscore" />
+    <result column="st_id" jdbcType="INTEGER" property="stId" />
+    <collection property="replyRecordList" column="qr_id" select="dao.ReplyRecordMapper.selectByqrid"></collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    qr_id, cc_id, aq_id, qstate, qscore, st_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from questionreply
+    where qr_id = #{qrId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByccid" parameterType="java.lang.Integer" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from questionreply
+    where cc_id = #{ccId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBystid" parameterType="java.lang.Integer" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from questionreply
+    where st_id = #{stId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBystidAndccid" parameterType="Map" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from questionreply
+    where st_id = #{stId,jdbcType=INTEGER} and cc_id=#{ccId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByccidAndaqidAndstid" parameterType="Map" resultMap="ListResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from questionreply
+    where st_id = #{stId,jdbcType=INTEGER} and cc_id=#{ccId,jdbcType=INTEGER} and aq_id =#{aqId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from questionreply
+    where qr_id = #{qrId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.QuestionReply">
+    insert into questionreply (qr_id, cc_id, aq_id, 
+      qstate, qscore, st_id)
+    values (#{qrId,jdbcType=INTEGER}, #{ccId,jdbcType=INTEGER}, #{aqId,jdbcType=INTEGER}, 
+      #{qstate,jdbcType=CHAR}, #{qscore,jdbcType=INTEGER}, #{stId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="po.QuestionReply">
+    insert into questionreply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="qrId != null">
+        qr_id,
+      </if>
+      <if test="ccId != null">
+        cc_id,
+      </if>
+      <if test="aqId != null">
+        aq_id,
+      </if>
+      <if test="qstate != null">
+        qstate,
+      </if>
+      <if test="qscore != null">
+        qscore,
+      </if>
+      <if test="stId != null">
+        st_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="qrId != null">
+        #{qrId,jdbcType=INTEGER},
+      </if>
+      <if test="ccId != null">
+        #{ccId,jdbcType=INTEGER},
+      </if>
+      <if test="aqId != null">
+        #{aqId,jdbcType=INTEGER},
+      </if>
+      <if test="qstate != null">
+        #{qstate,jdbcType=CHAR},
+      </if>
+      <if test="qscore != null">
+        #{qscore,jdbcType=INTEGER},
+      </if>
+      <if test="stId != null">
+        #{stId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="po.QuestionReply">
+    update questionreply
+    <set>
+      <if test="ccId != null">
+        cc_id = #{ccId,jdbcType=INTEGER},
+      </if>
+      <if test="aqId != null">
+        aq_id = #{aqId,jdbcType=INTEGER},
+      </if>
+      <if test="qstate != null">
+        qstate = #{qstate,jdbcType=CHAR},
+      </if>
+      <if test="qscore != null">
+        qscore = #{qscore,jdbcType=INTEGER},
+      </if>
+      <if test="stId != null">
+        st_id = #{stId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where qr_id = #{qrId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.QuestionReply">
+    update questionreply
+    set cc_id = #{ccId,jdbcType=INTEGER},
+      aq_id = #{aqId,jdbcType=INTEGER},
+      qstate = #{qstate,jdbcType=CHAR},
+      qscore = #{qscore,jdbcType=INTEGER},
+      st_id = #{stId,jdbcType=INTEGER}
+    where qr_id = #{qrId,jdbcType=INTEGER}
+  </update>
+</mapper>

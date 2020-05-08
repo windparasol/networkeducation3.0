@@ -1,0 +1,13 @@
+.col-lg-1 {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#imadiv {
+    margin-top: 60px;
+    height: 600px;
+    background-size: 100%;
+    padding-top: 150px;
+    padding-left: 200px;
+    padding-right: 200px;
+}

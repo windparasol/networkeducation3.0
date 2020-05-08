@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ClassRoomCaseMapper">
+  <resultMap id="BaseResultMap" type="po.ClassRoomCase">
+    <id column="cc_id" jdbcType="INTEGER" property="ccId" />
+    <result column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="cs_id" jdbcType="INTEGER" property="csId" />
+    <result column="start_time" jdbcType="DATE" property="startTime" />
+    <result column="end_time" jdbcType="DATE" property="endTime" />
+  </resultMap>
+
+  <resultMap id="fristListResultMap" type="po.ClassRoomCase">
+    <id column="cc_id" jdbcType="INTEGER" property="ccId" />
+    <result column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="cs_id" jdbcType="INTEGER" property="csId" />
+    <result column="start_time" jdbcType="DATE" property="startTime" />
+    <result column="end_time" jdbcType="DATE" property="endTime" />
+    <association property="cases" column="cs_id" select="dao.CasesMapper.selectByPrimaryKey"></association>
+    <collection property="actualQuestionList" column="cc_id" select="dao.ActualQuestionMapper.selectByccid"></collection>
+    <collection property="questionReplyList" column="cc_id" select="dao.QuestionReplyMapper.selectByccid"></collection>
+  </resultMap>
+
+  <resultMap id="secondListResultMap" type="po.ClassRoomCase">
+    <id column="cc_id" jdbcType="INTEGER" property="ccId" />
+    <result column="ro_id" jdbcType="INTEGER" property="roId" />
+    <result column="cs_id" jdbcType="INTEGER" property="csId" />
+    <result column="start_time" jdbcType="DATE" property="startTime" />
+    <result column="end_time" jdbcType="DATE" property="endTime" />
+    <association property="cases" column="cs_id" select="dao.CasesMapper.selectByPrimaryKey"></association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    cc_id, ro_id, cs_id, start_time, end_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="secondListResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from classroom_case
+    where cc_id = #{ccId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByroid" parameterType="java.lang.Integer" resultMap="secondListResultMap">
+    select <include refid="Base_Column_List" />
+    from classroom_case
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByroidAll" parameterType="java.lang.Integer" resultMap="fristListResultMap">
+    select <include refid="Base_Column_List" />
+    from classroom_case
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByroidAndcsid" parameterType="Map" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from classroom_case
+    where ro_id = #{roId,jdbcType=INTEGER} and cs_id = #{csId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByroidtwo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from classroom_case
+    where ro_id = #{roId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from classroom_case
+    where cc_id = #{ccId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="po.ClassRoomCase">
+    insert into classroom_case (cc_id, ro_id, cs_id, 
+      start_time, end_time)
+    values (#{ccId,jdbcType=INTEGER}, #{roId,jdbcType=INTEGER}, #{csId,jdbcType=INTEGER}, 
+      #{startTime,jdbcType=DATE}, #{endTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="po.ClassRoomCase">
+    insert into classroom_case
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ccId != null">
+        cc_id,
+      </if>
+      <if test="roId != null">
+        ro_id,
+      </if>
+      <if test="csId != null">
+        cs_id,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ccId != null">
+        #{ccId,jdbcType=INTEGER},
+      </if>
+      <if test="roId != null">
+        #{roId,jdbcType=INTEGER},
+      </if>
+      <if test="csId != null">
+        #{csId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="po.ClassRoomCase">
+    update classroom_case
+    <set>
+      <if test="roId != null">
+        ro_id = #{roId,jdbcType=INTEGER},
+      </if>
+      <if test="csId != null">
+        cs_id = #{csId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+    </set>
+    where cc_id = #{ccId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="po.ClassRoomCase">
+    update classroom_case
+    set ro_id = #{roId,jdbcType=INTEGER},
+      cs_id = #{csId,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=DATE},
+      end_time = #{endTime,jdbcType=DATE}
+    where cc_id = #{ccId,jdbcType=INTEGER}
+  </update>
+</mapper>
