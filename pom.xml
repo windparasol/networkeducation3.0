@@ -22,7 +22,7 @@
         <!-- for base -->
         <lombok.version>1.16.20</lombok.version>
         <log4j2.version>2.9.0</log4j2.version>
-        <spring.version>4.3.2.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
         <aspectj.version>1.8.10</aspectj.version>
 
         <!-- for Web -->
